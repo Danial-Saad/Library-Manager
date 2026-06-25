@@ -133,6 +133,18 @@ public class StudentsPanel extends JPanel {
                 return;
             }
 
+            if (!id.matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Student ID must contain numbers only.", "Validation Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!name.matches("[\\p{L}\\s]+")) {
+                JOptionPane.showMessageDialog(this, "Student Name must contain letters only (no numbers or symbols).",
+                        "Validation Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             if (manager.isStudentRegistered(id)) {
                 JOptionPane.showMessageDialog(this, "Student with this ID is already registered.", "Warning",
                         JOptionPane.WARNING_MESSAGE);
@@ -144,6 +156,7 @@ public class StudentsPanel extends JPanel {
             txtId.setText("");
             txtName.setText("");
             chkGraduated.setSelected(false);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

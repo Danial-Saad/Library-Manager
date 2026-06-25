@@ -2,6 +2,8 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.net.URL;
 
 public class SplashScreen extends JWindow {
 
@@ -11,11 +13,25 @@ public class SplashScreen extends JWindow {
         getContentPane().setBackground(Color.WHITE);
         setLayout(new GridBagLayout());
 
-        ImageIcon originalIcon = new ImageIcon("logo.jpg");
-        Image scaledImage = originalIcon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
-        JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
+        ImageIcon originalIcon = null;
+        URL imgURL = getClass().getResource("/logo.jpg");
 
-        add(logoLabel);
+        if (imgURL != null) {
+            originalIcon = new ImageIcon(imgURL);
+        } else {
+            File imgFile = new File("src/logo.jpg");
+            if (imgFile.exists()) {
+                originalIcon = new ImageIcon(imgFile.getAbsolutePath());
+            } else {
+                System.err.println("Error: Logo not found in Classpath or src/logo.jpg");
+            }
+        }
+
+        if (originalIcon != null) {
+            Image scaledImage = originalIcon.getImage().getScaledInstance(450, 450, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(scaledImage));
+            add(logoLabel);
+        }
     }
 
     public void showSplashAndExit() {
