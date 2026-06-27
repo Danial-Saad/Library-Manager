@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقرير الهندسي الشامل — الخوارزميات وهياكل البيانات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════
+           TOKENS & VARIABLES
+        ═══════════════════════════════════════════ */
+        :root {
+            --gold: #C8A96E;
+            --gold-dim: #8A6F45;
+            --blue: #3B9EFF;
+            --blue-dim: #1A5FA8;
+            --navy: #07111F;
+            --navy-mid: #0D1C30;
+            --navy-card: #112340;
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-mid: rgba(255, 255, 255, 0.12);
+            --white-90: rgba(255, 255, 255, 0.90);
+            --white-60: rgba(255, 255, 255, 0.60);
+            --white-35: rgba(255, 255, 255, 0.35);
+            --white-15: rgba(255, 255, 255, 0.15);
+            --white-07: rgba(255, 255, 255, 0.07);
+            --mono: 'JetBrains Mono', 'Courier New', monospace;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* ═══════════════════════════════════════════
+           RESET & BASE
+        ═══════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Segoe UI', sans-serif;
+            background: #070D18;
+            color: var(--navy);
+            line-height: 1.85;
+        }
+
+        /* ═══════════════════════════════════════════
+           A4 PAGE SETUP
+        ═══════════════════════════════════════════ */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        /* ═══════════════════════════════════════════
+           ██████  COVER PAGE
+        ═══════════════════════════════════════════ */
+        .cover {
+            width: 210mm;
+            height: 297mm;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+            break-after: page;
+            margin: 0 auto;
+        }
+
+        /* SVG circuit pattern background */
+        .cover-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0.045;
+            background-image:
+                linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        /* Large ghost text behind title */
+        .cover-ghost {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 180px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.018);
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: -0.05em;
+            line-height: 1;
+        }
+
+        /* Accent glow blobs */
+        .cover-glow-a {
+            position: absolute;
+            top: -120px;
+            right: -100px;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(59, 158, 255, 0.13) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .cover-glow-b {
+            position: absolute;
+            bottom: -120px;
+            left: 30px;
+            width: 360px;
+            height: 360px;
+            background: radial-gradient(circle, rgba(200, 169, 110, 0.11) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        /* Top accent bar */
+        .cover-bar-top {
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue) 0%, #6A3DFF 40%, var(--gold) 100%);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Main content grid */
+        .cover-body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            position: relative;
+            z-index: 5;
+            min-height: 0;
+        }
+
+        /* LEFT PANE */
+        .cover-left {
+            padding: 32px 36px 28px 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-left: 1px solid var(--border-subtle);
+        }
+
+        .cover-uni-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cover-uni-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 8px;
+            border: 1px solid var(--border-mid);
+        }
+
+        .cover-uni-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .cover-uni-text .uni-main {
+            font-size: 0.92em;
+            font-weight: 700;
+            color: var(--white-90);
+        }
+
+        .cover-uni-text .uni-sub {
+            font-size: 0.78em;
+            font-weight: 500;
+            color: var(--white-35);
+            letter-spacing: 0.04em;
+        }
+
+        .cover-center {
+            padding: 14px 0 16px;
+        }
+
+        .cover-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid rgba(59, 158, 255, 0.35);
+            border-radius: 100px;
+            padding: 4px 14px 4px 10px;
+            margin-bottom: 16px;
+            background: rgba(59, 158, 255, 0.08);
+        }
+
+        .cover-pill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--blue);
+            animation: pulse 2.4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.75);
+            }
+        }
+
+        .cover-pill span {
+            font-size: 0.78em;
+            font-weight: 700;
+            color: var(--blue);
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            font-family: var(--mono);
+        }
+
+        .cover-title {
+            font-size: 3.4em;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            color: #FFFFFF;
+            margin-bottom: 0;
+        }
+
+        .cover-title .t-blue {
+            color: var(--blue);
+        }
+
+        .cover-title .t-gold {
+            color: var(--gold);
+        }
+
+        .cover-rule {
+            margin: 16px 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            border-radius: 3px;
+            animation: ruleExpand 1.2s ease forwards 0.3s;
+        }
+
+        @keyframes ruleExpand {
+            to {
+                width: 80px;
+            }
+        }
+
+        .cover-desc {
+            font-size: 0.95em;
+            font-weight: 400;
+            color: var(--white-60);
+            line-height: 1.8;
+            max-width: 420px;
+        }
+
+        /* Meta row */
+        .cover-meta {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--border-mid);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .cover-meta-cell {
+            flex: 1;
+            padding: 12px 16px;
+            border-left: 1px solid var(--border-mid);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .cover-meta-cell:last-child {
+            border-left: none;
+        }
+
+        .meta-label {
+            font-size: 0.7em;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--white-35);
+            font-family: var(--mono);
+        }
+
+        .meta-value {
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .meta-value.gold {
+            color: var(--gold);
+        }
+
+        .meta-value.blue {
+            color: var(--blue);
+        }
+
+        /* RIGHT PANE */
+        .cover-right {
+            background: var(--navy-card);
+            border-right: 1px solid var(--border-subtle);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .cr-section-label {
+            font-size: 0.7em;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--white-35);
+            font-family: var(--mono);
+            margin-bottom: 12px;
+        }
+
+        .cr-heading {
+            font-size: 1.45em;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+
+        /* Student cards */
+        .student-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 24px;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--blue), var(--gold));
+            border-radius: 0 10px 10px 0;
+        }
+
+        .s-num {
+            font-family: var(--mono);
+            font-size: 0.78em;
+            font-weight: 700;
+            color: var(--blue);
+            background: rgba(59, 158, 255, 0.1);
+            border: 1px solid rgba(59, 158, 255, 0.2);
+            border-radius: 6px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .s-name {
+            font-size: 1.0em;
+            font-weight: 700;
+            color: var(--white-90);
+        }
+
+        /* Projects section */
+        .cr-divider {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin-bottom: 24px;
+        }
+
+        .project-chips {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .p-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+
+        .p-chip.gold-chip {
+            border-color: rgba(200, 169, 110, 0.25);
+            background: rgba(200, 169, 110, 0.07);
+        }
+
+        .p-chip.blue-chip {
+            border-color: rgba(59, 158, 255, 0.2);
+            background: rgba(59, 158, 255, 0.06);
+        }
+
+        .chip-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        .gold-chip .chip-icon {
+            background: rgba(200, 169, 110, 0.15);
+        }
+
+        .blue-chip .chip-icon {
+            background: rgba(59, 158, 255, 0.12);
+        }
+
+        .chip-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .chip-name {
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        .gold-chip .chip-name {
+            color: var(--gold);
+        }
+
+        .blue-chip .chip-name {
+            color: var(--blue);
+        }
+
+        .chip-sub {
+            font-size: 0.75em;
+            color: var(--white-35);
+            font-family: var(--mono);
+        }
+
+        /* Bottom bar */
+        .cover-bar-bottom {
+            height: 40px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .bar-bottom-txt {
+            font-size: 0.75em;
+            font-weight: 500;
+            color: var(--white-35);
+            font-family: var(--mono);
+            letter-spacing: 0.06em;
+        }
+
+        .bar-bottom-line {
+            width: 90px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--gold));
+            border-radius: 2px;
+        }
+
+        /* ═══════════════════════════════════════════
+           SECTION WRAPPERS (تم حل مشكلة الفراغات بشكل جذري)
+        ═══════════════════════════════════════════ */
+        .report-section {
+            padding: 72px 32px;
+        }
+
+        .report-section.light {
+            background: #F0F4F8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .report-section.light::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 297mm;
+            /* يعبئ فراغ الورقة الأولى فقط دون التسبب بصفحات فارغة جديدة */
+            background: #F0F4F8;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .report-section.dark {
+            background: #070D18;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ═══════════════════════════════════════════
+           PROJECT CARD
+        ═══════════════════════════════════════════ */
+        .report-card {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.18);
+        }
+
+        /* card theme vars */
+        .card-warm {
+            --c-bg: #FFFFFF;
+            --c-surface: #F7F4EF;
+            --c-border: #E4DDD3;
+            --c-text: #1C1811;
+            --c-muted: #5A5248;
+            --c-accent: #B8864E;
+            --c-accent2: #1C1811;
+            --c-code-bg: #FDF8F2;
+            --c-code-txt: #7A4F1E;
+            --c-badge-bg: #1C1811;
+            --c-badge-txt: #C8A96E;
+            --c-math-bg: #F9F6F1;
+            --c-h3-bg: #1C1811;
+            --c-h3-txt: #F7F4EF;
+            --c-h4-bar: #B8864E;
+        }
+
+        .card-cool {
+            --c-bg: #0C1828;
+            --c-surface: #0F2038;
+            --c-border: #1A3050;
+            --c-text: #E8F0FA;
+            --c-muted: #8AA8CC;
+            --c-accent: #3B9EFF;
+            --c-accent2: #FFD060;
+            --c-code-bg: rgba(59, 158, 255, 0.12);
+            --c-code-txt: #7DCFFF;
+            --c-badge-bg: #0A0F1A;
+            --c-badge-txt: #FFD060;
+            --c-math-bg: #081220;
+            --c-h3-bg: #FFD060;
+            --c-h3-txt: #0C1828;
+            --c-h4-bar: #3B9EFF;
+        }
+
+        /* Card header banner */
+        .card-header {
+            padding: 52px 64px 44px;
+            background: var(--c-bg);
+            border-bottom: 2px solid var(--c-border);
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .card-header-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid var(--c-border);
+            flex-shrink: 0;
+        }
+
+        .card-header-banner {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+            border: 2px solid var(--c-border);
+        }
+
+        .card-header-text {
+            flex: 1;
+        }
+
+        .card-project-num {
+            font-family: var(--mono);
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--c-accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-project-num::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--c-border);
+            max-width: 60px;
+        }
+
+        .card-title {
+            font-size: 2.4em;
+            font-weight: 900;
+            color: var(--c-text);
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 0.9em;
+            color: var(--c-accent);
+            font-weight: 700;
+            font-family: var(--mono);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        /* Card body */
+        .card-body {
+            background: var(--c-bg);
+            padding: 52px 64px 64px;
+        }
+
+        /* Section heading (h2 equiv) */
+        .sec-h2 {
+            font-size: 1.9em;
+            font-weight: 800;
+            color: var(--c-accent);
+            margin-top: 56px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--c-border);
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+
+        .sec-h2-num {
+            font-family: var(--mono);
+            font-size: 0.6em;
+            font-weight: 700;
+            color: var(--c-border);
+            letter-spacing: 0.1em;
+        }
+
+        .sec-p {
+            font-size: 1.13em;
+            color: var(--c-muted);
+            line-height: 1.9;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .sec-p strong {
+            color: var(--c-text);
+            font-weight: 800;
+        }
+
+        .sec-ul,
+        .sec-ol {
+            font-size: 1.13em;
+            color: var(--c-muted);
+            padding-right: 28px;
+            line-height: 1.85;
+        }
+
+        .sec-ul li,
+        .sec-ol li {
+            margin-bottom: 12px;
+        }
+
+        .sec-ul li strong,
+        .sec-ol li strong {
+            color: var(--c-text);
+            font-weight: 800;
+        }
+
+        /* ═══════════════════════════════════════════
+           Algorithm box (تم الإصلاح لمنع القص والتشوه)
+        ═══════════════════════════════════════════ */
+        .algo-box {
+            background: var(--c-surface);
+            border: 1px solid var(--c-border);
+            border-radius: 16px;
+            padding: 36px 40px;
+            margin: 28px 0;
+            position: relative;
+            /* تمت إزالة overflow: hidden للسماح للعناصر بالالتفاف بحرية دون الانقطاع */
+            box-sizing: border-box;
+        }
+
+        .algo-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--c-accent), transparent);
+            border-radius: 16px 16px 0 0;
+            /* تمت إضافة الانحناء للخط العلوي بدلاً من القص */
+        }
+
+        /* h3 — algo box heading */
+        .algo-h3 {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--c-h3-bg);
+            color: var(--c-h3-txt);
+            padding: 10px 22px 10px 16px;
+            border-radius: 10px;
+            font-size: 1.35em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            margin-top: 32px;
+        }
+
+        .algo-h3:first-child {
+            margin-top: 0;
+        }
+
+        .algo-h3-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--c-accent);
+            flex-shrink: 0;
+        }
+
+        /* h4 (العناوين الفرعية العربية) */
+        .algo-h4 {
+            font-size: 1.18em;
+            font-weight: 800;
+            color: var(--c-text);
+            margin-top: 28px;
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            background: var(--c-math-bg);
+            /* تصحيح الاتجاه: الخط البرتقالي على اليمين والانحناء على اليسار فقط للغة العربية */
+            border-radius: 10px 0 0 10px;
+            border-right: 5px solid var(--c-h4-bar);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Code / highlight */
+        .hi {
+            background: var(--c-code-bg);
+            color: var(--c-code-txt);
+            padding: 2px 9px;
+            border-radius: 6px;
+            font-family: var(--mono);
+            font-size: 0.92em;
+            font-weight: 700;
+        }
+
+        /* Complexity badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--c-badge-bg);
+            color: var(--c-badge-txt);
+            padding: 4px 14px;
+            border-radius: 100px;
+            font-family: var(--mono);
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .badge::before {
+            content: 'Ο';
+            font-size: 0.9em;
+            opacity: 0.6;
+        }
+
+        /* Math block (كتلة المعادلات الإنجليزية) */
+        .math-block {
+            background: var(--c-math-bg);
+            border: 1px solid var(--c-border);
+            /* تصحيح الاتجاه: الخط البرتقالي على اليسار والانحناء على اليمين للغة الإنجليزية LTR */
+            border-left: 5px solid var(--c-accent);
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            font-family: var(--mono);
+            font-size: 1.0em;
+            font-weight: 700;
+            direction: ltr;
+            text-align: left;
+            color: var(--c-text);
+            margin: 20px 0;
+            line-height: 1.7;
+            /* ضمان التفاف النصوص وعدم تجاوزها عرض الصندوق */
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Card footer */
+        .card-footer {
+            margin-top: 64px;
+            padding-top: 28px;
+            border-top: 1px solid var(--c-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: var(--c-muted);
+            font-size: 0.95em;
+            font-weight: 700;
+            font-family: var(--mono);
+        }
+
+        .card-footer-line {
+            flex: 1;
+            max-width: 80px;
+            height: 1px;
+            background: var(--c-border);
+        }
+
+        /* ═══════════════════════════════════════════
+           PRINT
+        ═══════════════════════════════════════════ */
+        .print-break {
+            display: none;
+        }
+
+        @media print {
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                width: 210mm;
+            }
+
+            .report-section {
+                padding: 40px 20px;
+            }
+
+            .algo-box {
+                page-break-inside: avoid;
+            }
+
+            .algo-h3,
+            .algo-h4,
+            .sec-h2 {
+                page-break-after: avoid;
+            }
+
+            .cover {
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .print-break {
+                display: block;
+                height: 0;
+                overflow: hidden;
+                page-break-after: always;
+                break-after: page;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ════════════════════════════════
+         COVER
+    ════════════════════════════════ -->
+    <div class="cover">
+        <div class="cover-bg"></div>
+        <div class="cover-ghost">DSA</div>
+        <div class="cover-glow-a"></div>
+        <div class="cover-glow-b"></div>
+        <div class="cover-bar-top"></div>
+
+        <div class="cover-body">
+
+            <!-- LEFT -->
+            <div class="cover-left">
+
+                <!-- University -->
+                <div class="cover-uni-row">
+                    <img src="assets/uni-logo.jpg" alt="شعار الجامعة" class="cover-uni-logo">
+                    <div class="cover-uni-text">
+                        <span class="uni-main">كلية الهندسة المعلوماتية</span>
+                        <span class="uni-sub">جامعة دمشق</span>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <div class="cover-center">
+                    <div class="cover-pill">
+                        <div class="cover-pill-dot"></div>
+                        <span>مشروع الخوارزميات — 2</span>
+                    </div>
+
+                    <h1 class="cover-title">
+                        التقرير<br>
+                        <span class="t-blue">الهندسي</span><br>
+                        <span class="t-gold">الشامل</span>
+                    </h1>
+
+                    <div class="cover-rule"></div>
+
+                    <p class="cover-desc">
+                        توثيق تفصيلي للمعمارية الخوارزمية المتقدمة المُطبّقة
+                        في مشروعَي نظام إدارة المكتبة وشبكة القطارات السورية،
+                        مع تحليل عميق للتعقيد الزمني والمكاني لكل هيكل بيانات.
+                    </p>
+                </div>
+
+                <!-- Meta -->
+                <div class="cover-meta">
+                    <div class="cover-meta-cell">
+                        <span class="meta-label">المشرف</span>
+                        <span class="meta-value">م. أمير أبو الشعر</span>
+                    </div>
+                    <div class="cover-meta-cell">
+                        <span class="meta-label">الفئة</span>
+                        <span class="meta-value gold">7</span>
+                    </div>
+                    <div class="cover-meta-cell">
+                        <span class="meta-label">السنة الدراسية</span>
+                        <span class="meta-value blue">الثانية</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="cover-right">
+
+                <div class="cr-heading">أعضاء الفريق</div>
+
+                <ul class="student-list">
+                    <li class="student-item">
+                        <div class="s-num">1</div>
+                        <span class="s-name">دانيال فادي سعد</span>
+                    </li>
+                    <li class="student-item">
+                        <div class="s-num">2</div>
+                        <span class="s-name">جولي الياس وسوف</span>
+                    </li>
+                    <li class="student-item">
+                        <div class="s-num">3</div>
+                        <span class="s-name">زينة سهيل معمر</span>
+                    </li>
+                    <li class="student-item">
+                        <div class="s-num">4</div>
+                        <span class="s-name">ريبال نمر داود</span>
+                    </li>
+                </ul>
+
+                <hr class="cr-divider">
+
+                <div class="cr-section-label">المشاريع المُوثّقة</div>
+
+                <div class="project-chips">
+                    <div class="p-chip gold-chip">
+                        <div class="chip-icon">📚</div>
+                        <div class="chip-text">
+                            <span class="chip-name">نظام إدارة المكتبة</span>
+                            <span class="chip-sub">AVL Tree · Min-Heap</span>
+                        </div>
+                    </div>
+                    <div class="p-chip blue-chip">
+                        <div class="chip-icon">🚄</div>
+                        <div class="chip-text">
+                            <span class="chip-name">شبكة القطارات السورية</span>
+                            <span class="chip-sub">Graph · Dijkstra · DFS</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="cover-bar-bottom">
+            <span class="bar-bottom-txt">Algorithms &amp; Data Structures — Engineering Report</span>
+            <div class="bar-bottom-line"></div>
+            <span class="bar-bottom-txt">2025 / 2026</span>
+        </div>
+    </div>
+
+
+    <!-- ════════════════════════════════
+         PROJECT 1 — LIGHT / WARM
+    ════════════════════════════════ -->
+    <div class="report-section light">
+        <div class="report-card card-warm">
+
+            <div class="card-header">
+                <img src="assets/logo.jpg" alt="Library Logo" class="card-header-logo">
+                <div class="card-header-text">
+                    <div class="card-project-num">Project 01</div>
+                    <h2 class="card-title">نظام إدارة المكتبة</h2>
+                    <div class="card-subtitle">Library Management System — In-Depth Algorithmic Architecture</div>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <h2 class="sec-h2"><span class="sec-h2-num">01</span> التحدي الهندسي ومبررات التصميم</h2>
+                <p class="sec-p">تم بناء هذا النظام ليكون حلاً برمجياً متيناً <strong>(Robust)</strong> وقابلاً للتوسع
+                    <strong>(Scalable)</strong> للتعامل مع قواعد بيانات ضخمة. المعضلة الأساسية في أنظمة المكتبات
+                    التقليدية هي ظاهرة <strong>"تدهور الأداء" (Performance Degradation)</strong>. عند استخدام هياكل
+                    بيانات خطية مثل المصفوفات الديناميكية (ArrayList) أو القوائم المترابطة (LinkedList)، فإن عمليات
+                    البحث تتطلب المرور الخطي على العناصر بتعقيد زمني <strong>O(n)</strong>. في حال وجود مليون كتاب،
+                    سيحتاج النظام إلى مليون عملية مقارنة في أسوأ الحالات!
+                </p>
+                <p class="sec-p">لتجاوز هذا العنق الزجاجي <strong>(Bottleneck)</strong>، تم التخلي تماماً عن الهياكل
+                    الخطية واستبدالها بهياكل بيانات غير خطية <strong>(Non-linear Data Structures)</strong> تعتمد على
+                    الأشجار المتوازنة والأكوام، مما يضمن أداءً لوغاريتمياً ثابتاً <strong>O(log n)</strong> بغض النظر عن
+                    حجم البيانات.</p>
+
+                <h2 class="sec-h2"><span class="sec-h2-num">02</span> التشريح الخوارزمي العميق</h2>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>أ. محرك البحث والتخزين: شجرة AVL المتوازنة
+                        ذاتياً</div>
+                    <p class="sec-p">تم اختيار شجرة <strong>AVL (Adelson-Velsky and Landis)</strong> كحاوية أساسية
+                        للكتب. شجرة البحث الثنائية العادية (BST) تعاني من ثغرة قاتلة: إذا تم إدخال الكتب بأرقام متسلسلة،
+                        فإن الشجرة ستتحول إلى سلسلة مترابطة مائلة <strong>(Skewed Tree)</strong>، مما يعيد التعقيد
+                        الزمني إلى <strong>O(n)</strong>. هنا تتدخل خوارزمية AVL لكسر هذا التسلسل وفرض التوازن الإجباري.
+                    </p>
+
+                    <div class="algo-h4">— خوارزمية التتبع الرياضي (Height & Balance Factor)</div>
+                    <p class="sec-p">تحتوي كل عقدة <span class="hi">AVLNode</span> على متغير <span
+                            class="hi">height</span> يمثل أطول مسار من تلك العقدة إلى أبعد ورقة (Leaf) تحتها. أثناء
+                        عملية إدخال كتاب جديد عبر خوارزمية التكرار الذاتي (Recursion)، وبعد العثور على المكان المناسب،
+                        تبدأ مرحلة <strong>العودة (Backtracking)</strong> لتحديث ارتفاع كل عقدة أب وحساب عامل التوازن:
+                    </p>
+                    <div class="math-block">
+                        BalanceFactor(N) = Height(N.Left) - Height(N.Right)<br>
+                        Valid State : BF ∈ { -1, 0, 1 }<br>
+                        Unbalanced : BF ∈ { -2, 2 } → Rotation Required
+                    </div>
+
+                    <div class="algo-h4">— خوارزميات التدوير ومعالجة المؤشرات (Memory Pointer Rotations)</div>
+                    <p class="sec-p"><span class="badge">Time: O(1)</span> قوة الـ AVL تكمن في إعادة هيكلة نفسها في
+                        الذاكرة دون نقل أي بيانات فعلية <strong>(Zero Data Movement)</strong>، بل فقط عبر تعديل مراجع
+                        الذاكرة (Pointers). النظام مجهز بـ 4 خوارزميات تدوير دقيقة:</p>
+                    <ol class="sec-ol">
+                        <li><strong>الدوران اليميني (Right Rotation — LL Case):</strong> يحدث عندما يكون BF = 2 والابن
+                            الأيسر يمتلك BF ≥ 0. نفك ارتباط الابن الأيسر (x) لنجعله الأب الجديد، ونجعل الأب القديم (y)
+                            ابناً أيمن له.</li>
+                        <li><strong>الدوران اليساري (Left Rotation — RR Case):</strong> يحدث عندما يكون BF = -2 والابن
+                            الأيمن يمتلك BF ≤ 0. نصعد بالابن الأيمن ليصبح الجذر الفرعي.</li>
+                        <li><strong>الدوران المزدوج (Left-Right Rotation):</strong> حالة الـ Zig-Zag. نشغّل <span
+                                class="hi">rotateLeft</span> على الابن الأيسر أولاً ثم <span
+                                class="hi">rotateRight</span> على العقدة الرئيسية.</li>
+                        <li><strong>الدوران المزدوج (Right-Left Rotation):</strong> المعاكس تماماً؛ دوران يميني على
+                            الابن ثم يساري على العقدة.</li>
+                    </ol>
+
+                    <div class="algo-h4">— خوارزمية البحث الثنائي المتقدم (Advanced Binary Search)</div>
+                    <p class="sec-p"><span class="badge">Time: O(log n)</span> عند استعلام الموظف عن كتاب برقم الـ ISBN،
+                        تبدأ الخوارزمية من الجذر وتستبعد نصف الشجرة في كل خطوة. في شجرة تحتوي على مليون كتاب، نصل
+                        للنتيجة بـ 20 عملية مقارنة فقط كحد أقصى.</p>
+
+                    <div class="algo-h4">— خوارزمية المرور الترتيبي (In-Order Traversal)</div>
+                    <p class="sec-p"><span class="badge">Time: O(n)</span> لعرض الكتب مرتبةً أبجدياً، نستخدم خوارزمية
+                        العبور <span class="hi">In-Order (Left → Root → Right)</span> التي تستخرج العقد مرتبةً بشكل
+                        طبيعي دون الحاجة لأي خوارزمية فرز إضافية.</p>
+                </div>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>ب. نظام إدارة الأولويات: الكومة الصغرى
+                        (Min-Heap Priority Queue)</div>
+                    <p class="sec-p">طابور الانتظار (Waitlist) للكتب غير المتوفرة يمثل تحدياً منطقياً. قواعد النظام
+                        الأكاديمي تفرض <strong>أفضلية مطلقة للطلاب الخريجين</strong> <span class="hi">isGraduated =
+                            true</span>. لتطبيق هذا الشرط دون فرز متكرر ومكلف، تم استخدام هيكل بيانات
+                        <strong>Min-Heap</strong>.
+                    </p>
+
+                    <div class="algo-h4">— آلية التقييم والمقارنة (Priority Comparator Logic)</div>
+                    <p class="sec-p">يعمل الـ Heap بناءً على مُقيّم (Comparator) يحدد "وزن" كل طالب: أولاً يتم فحص حالة
+                        التخرج، فالخريج يتقدم على غير الخريج. عند التساوي يُحتكم للـ Timestamp.</p>
+
+                    <div class="algo-h4">— خوارزمية الإضافة والتصعيد (Heapify-Up / Bubble-Up)</div>
+                    <p class="sec-p"><span class="badge">Time: O(log n)</span> عند إضافة طالب جديد يُوضع في أسفل الكومة،
+                        ثم تبدأ خوارزمية <span class="hi">Bubble-Up</span> فتقارنه مع عقدة الأب وتصعّده حتى يستقر الخريج
+                        في القمة متجاوزاً كل الطلاب العاديين.</p>
+
+                    <div class="algo-h4">— خوارزمية الاستخراج والهبوط (Extract-Min / Heapify-Down)</div>
+                    <p class="sec-p"><span class="badge">Time: O(log n)</span> عند إرجاع الكتاب، تسحب الدالة جذر الكومة
+                        (الطالب الأحق)، تضع آخر عقدة في القمة، ثم تشغّل <span class="hi">Heapify-Down</span> لإعادة
+                        الترتيب الهرمي الصارم.</p>
+                </div>
+                <h2 class="sec-h2"><span class="sec-h2-num">03</span> هندسة واجهة المستخدم (GUI Architecture & MVC)</h2>
+                <p class="sec-p">الواجهة الرسومية انعكاس لهندسة برمجية نظيفة تعتمد على مبادئ <strong>فصل الاهتمامات
+                        (Separation of Concerns)</strong>:</p>
+                <ul class="sec-ul">
+                    <li><strong>الفصل الهيكلي (Modularity):</strong> تقسيم الواجهات إلى لوحات مستقلة مثل <span
+                            class="hi">BooksPanel</span> و<span class="hi">StudentsPanel</span>، كل لوحة مسؤولة عن جزئية
+                        واحدة فقط مما يجعل الكود قابلاً للصيانة.</li>
+                    <li><strong>حماية خيوط المعالجة (Thread Safety):</strong> تغليف استدعاءات الواجهة باستخدام <span
+                            class="hi">SwingUtilities.invokeLater()</span> لضمان أن بناء الواجهة يتم حصرياً داخل خيط
+                        معالجة الأحداث (EDT).</li>
+                </ul>
+
+                <div class="card-footer">
+                    <div class="card-footer-line"></div>
+                    نهاية تقرير المشروع الأول
+                    <div class="card-footer-line"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ════════════════════════════════
+         PROJECT 2 — DARK / COOL
+    ════════════════════════════════ -->
+    <div class="print-break"></div>
+    <div class="report-section dark">
+        <div class="report-card card-cool">
+
+            <div class="card-header">
+                <img src="assets/train_background.jpg" alt="Train Network" class="card-header-banner">
+            </div>
+
+            <div class="card-body">
+                <div class="card-project-num"
+                    style="color:var(--c-accent); font-family:var(--mono); font-size:0.75em; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+                    Project 02
+                    <span style="flex:1;height:1px;background:var(--c-border);max-width:60px;"></span>
+                </div>
+                <h2 class="card-title"
+                    style="color:var(--c-text);font-size:2.4em;font-weight:900;margin-bottom:6px;letter-spacing:-0.5px;">
+                    شبكة القطارات السورية</h2>
+                <div class="card-subtitle"
+                    style="color:var(--c-accent);font-family:var(--mono);font-size:0.88em;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:32px;">
+                    Train Routing Graph & Advanced Network Architecture</div>
+
+                <h2 class="sec-h2"><span class="sec-h2-num">01</span> الأساسيات ونماذج البيانات (Data Models & Core
+                    Logic)</h2>
+                <p class="sec-p">لا يمكن بناء خوارزميات قوية دون نماذج بيانات <strong>(Classes)</strong> متينة. تم تصميم
+                    الكائنات الأساسية لتكون محصنة رياضياً ضد الأخطاء التي تنهار بسببها خوارزميات مثل ديكسترا.</p>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>أ. الكيان الأساسي: المحطة (Station.java)</div>
+                    <p class="sec-p">يُمثل هذا الكلاس المحطة (Vertex/Node) في بنية الرسم البياني.</p>
+                    <ul class="sec-ul">
+                        <li><strong>تخزين الإحداثيات المكانية:</strong> يحتوي الكلاس على متغيرات <span class="hi">int x,
+                                y</span> تسمح لكل عقدة بالاحتفاظ بمكانها الفيزيائي لغايات المحاكاة البصرية (GUI) دون
+                            خرائط خارجية.</li>
+                        <li><strong>ضمان التفرد (Uniqueness & Hashing):</strong> تم إعادة تعريف دوال <span
+                                class="hi">equals()</span> و<span class="hi">hashCode()</span> بحيث أي محطتين بنفس الاسم
+                            أو الرمز — بغض النظر عن حالة الأحرف — هما محطة واحدة، مما يمنع تكرار العقد كلياً.</li>
+                    </ul>
+
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>ب. الكيان الناقل: المسار الموزون (Path.java)
+                    </div>
+                    <p class="sec-p">يُمثل هذا الكلاس الطريق (Directed Edge) الذي يربط عقدتين ويحتوي على الوجهة <span
+                            class="hi">Destination</span> والوزن <span class="hi">Distance</span>.</p>
+                    <ul class="sec-ul">
+                        <li><strong>منطق الحماية (Validation Algorithm):</strong> ديكسترا تفشل مع الحواف السالبة؛ لذا
+                            الـ Setter الخاص بالمسافة يتحقق من <span class="hi">if (distance &lt;= 0)</span> ويرمي <span
+                                class="hi">IllegalArgumentException</span> لرفض المسار وضمان طهارة البيانات رياضياً.
+                        </li>
+                    </ul>
+                </div>
+
+                <h2 class="sec-h2"><span class="sec-h2-num">02</span> التخطيط الهندسي للرسوم البيانية (Graph Engine)
+                </h2>
+                <p class="sec-p">يُدار النظام عبر الكلاس المركزي <span class="hi">TrainPath.java</span>. تم تصميم الشبكة
+                    كـ <strong>رسم بياني موجه وموزون (Weighted Directed Graph)</strong>.</p>
+                <p class="sec-p">لتفادي المصفوفات ثنائية الأبعاد (Adjacency Matrices) وهدرها الذاكري، تم هندسة النظام بـ
+                    <strong>قوائم الجوار (Adjacency List)</strong> عبر <span class="hi">HashMap&lt;Station,
+                        List&lt;Path&gt;&gt; Network</span>. التعقيد المكاني المثالي للشبكات المتفرقة: <strong>O(V +
+                        E)</strong>.
+                </p>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>أ. محرك إيجاد المسارات: خوارزمية ديكسترا
+                        (Dijkstra)</div>
+                    <p class="sec-p">الخوارزمية المعيارية للرسوم البيانية ذات الأوزان الموجبة، تُستدعى للرد على طلب
+                        "أقصر طريق بين محطتين".</p>
+
+                    <div class="algo-h4">— هندسة الخوارزمية والتتبع (Implementation Details)</div>
+                    <p class="sec-p"><span class="badge">Time: O(E log V)</span></p>
+                    <ol class="sec-ol">
+                        <li><strong>التهيئة:</strong> مسافة جميع العقد = <span class="hi">Double.MAX_VALUE</span>
+                            باستثناء عقدة البداية التي تأخذ القيمة <span class="hi">0.0</span>.</li>
+                        <li><strong>الاسترخاء (Relaxation):</strong> طابور أولوية مصغر <span
+                                class="hi">PriorityQueue</span> مع كائن وسيط <span class="hi">StationDistancePair</span>
+                            يضمن استخراج العقدة ذات التكلفة الأقل بتعقيد O(log V).</li>
+                        <li><strong>بناء مسار العودة (Backtracking Map):</strong> أثناء الاكتشاف تُسجّل العقدة الأب في
+                            قاموس التتبع <span class="hi">parentMap</span>.</li>
+                        <li><strong>الخروج المبكر (Early Exit):</strong> فور بلوغ عقدة الوجهة تتوقف الحلقة وتُجري تتبعاً
+                            عكسياً عبر parentMap لبناء المسار المثالي.</li>
+                    </ol>
+                </div>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>ب. خوارزميات الاستكشاف (DFS) والترتيب</div>
+
+                    <div class="algo-h4">— اكتشاف الدورات (DFS Cycle Detection)</div>
+                    <p class="sec-p"><span class="badge">Time: O(V + E)</span> للتحقق من خلو الشبكة من المسارات المغلقة
+                        (Loops) تم برمجة DFS بأسلوب <strong>التلوين الثلاثي (3-Coloring Technique)</strong>:</p>
+                    <ul class="sec-ul">
+                        <li><span class="hi">State 0 — Unvisited:</span> المحطة لم تُكتشف بعد، متاحة للاستدعاء الذاتي.
+                        </li>
+                        <li><span class="hi">State 1 — Visiting:</span> المحطة في مكدس الاستدعاء الذاتي حالياً
+                            (Recursion Stack).</li>
+                        <li><span class="hi">State 2 — Visited:</span> تم استكشاف المحطة وجميع جيرانها بنجاح.</li>
+                    </ul>
+                    <p class="sec-p">إذا حاول DFS زيارة جار وتفاجأ بحالته "1" فهذا يعني وجود Back Edge — دليل رياضي حتمي
+                        على حلقة مغلقة.</p>
+
+                    <div class="algo-h4">— الترتيب المركزي (Sorting by Out-Degree)</div>
+                    <p class="sec-p"><span class="badge">Time: O(V log V)</span> لإبراز المحطات المركزية، بُني <span
+                            class="hi">Comparator</span> مخصص يجلب حجم قائمة المسارات الخارجة لكل محطة ويمرره لـ <span
+                            class="hi">Collections.sort</span> فرزاً تنازلياً لإظهار المحاور (Hubs) أولاً.</p>
+                </div>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>ج. معالجة الملفات (File I/O & Parsing)</div>
+                    <p class="sec-p">يدعم النظام استيراد وتصدير الشبكات المعقدة عبر نظام نصوص مهيكل:</p>
+                    <ul class="sec-ul">
+                        <li><strong>محرك الاستيراد (Parsing Engine):</strong> يستخدم <span
+                                class="hi">String.split("->")</span> وعزل الأوزان من الأقواس لفك تشفير مسارات الشبكة.
+                        </li>
+                        <li><strong>توليد البيانات بذكاء (Auto-Generation):</strong> عند مواجهة محطة جديدة يقتطع النظام
+                            أول 3 أحرف من اسمها عبر <span class="hi">substring()</span> ويستعين بـ <span
+                                class="hi">getProvinceLocation(name)</span> لتعيين إحداثيات افتراضية مناسبة للمحافظات
+                            السورية.</li>
+                        <li><strong>التمثيل البصري (ASCII Rendering):</strong> دالة <span
+                                class="hi">renderNetworkToFile</span> تطبع هيكلاً رسومياً للشبكة في الملفات النصية
+                            باستخدام رموز مثل <span class="hi">├─── 🛤️ ──(90.0 km)──> [ Daraa ]</span>.</li>
+                    </ul>
+                </div>
+
+                <h2 class="sec-h2"><span class="sec-h2-num">03</span> العمارة البرمجية وواجهة المستخدم (MVC & Custom UI)
+                </h2>
+                <p class="sec-p">تم بناء واجهة رسومية تعتمد على نمط <strong>MVC (Model-View-Controller)</strong>. الطبقة
+                    الوسيطة <span class="hi">TrainController.java</span> تعمل كبوابة حراسة تمنع الواجهات من التخاطب
+                    المباشر مع محرك الغراف وتلتقط الاستثناءات وتحولها لرسائل واضحة.</p>
+
+                <div class="algo-box">
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>الرسم الحي والمحاكاة (Graphics2D Live
+                        Rendering)</div>
+                    <p class="sec-p">تم بناء <span class="hi">MapPanel.java</span> و<span
+                            class="hi">Station_UI.java</span> لرسم الشبكة تفاعلياً:</p>
+                    <ul class="sec-ul">
+                        <li>دالة <span class="hi">paintComponent</span> ترسم خريطة سوريا كخلفية وفوقها تُرسم المحطات
+                            كعقد هندسية ديناميكية باستخدام إحداثياتها (X, Y).</li>
+                        <li><strong>رياضيات التفاعل (Hover Math):</strong> معادلة الدائرة <span class="hi">dx*dx + dy*dy
+                                &lt;= size*size</span> تحدد ما إذا كان مؤشر الماوس فوق المحطة فيُكبّر قطرها ويُغير لونها
+                            ويعرض Tooltip فوري.</li>
+                        <li><strong>هندسة الخطوط:</strong> يحسب النظام منتصف كل خط بدقة عبر <span class="hi">midX =
+                                (x1+x2)/2</span> و<span class="hi">midY = (y1+y2)/2</span> لطباعة المسافة في موقعها
+                            الصحيح.</li>
+                    </ul>
+
+                    <div class="algo-h3"><span class="algo-h3-dot"></span>التمييز البصري الذكي (Visual Path
+                        Highlighting)</div>
+                    <p class="sec-p">عند تنفيذ "أقصر مسار"، تقوم الدالة <span class="hi">isInShortestPath(source,
+                            dest)</span> بمقاطعة كل مسار في الشبكة مع مخرجات ديكسترا. المسار الفائز يتحول من اللون
+                        السماوي <span class="hi">Color(0, 180, 255)</span> إلى <strong>الذهبي المضيء <span
+                                class="hi">Color(255, 215, 0)</span></strong>، مما يقدم تغذية بصرية مبهرة للمستخدم.</p>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-footer-line"></div>
+                    نهاية التقرير
+                    <div class="card-footer-line"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
